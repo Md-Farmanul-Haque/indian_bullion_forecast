@@ -56,12 +56,12 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/ibja_daily.csv data/ibja_sources.csv data/forecasts.csv
+          git add data/ibja_daily.csv data/ibja_sources.csv data/forecasts.csv data/site.json
           if git diff --cached --quiet; then
             echo "No new data."
           else
             git commit -m "Daily price update $(TZ=Asia/Kolkata date +%Y-%m-%d)"
-            git pull --rebase origin main
+            git pull --rebase --autostash origin main
             git push origin HEAD:main
           fi
 
