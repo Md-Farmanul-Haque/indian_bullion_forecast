@@ -7,6 +7,7 @@ Steps (at most a few small requests per run, once a day):
    value replaces a hand-transcribed one if they differ (logged in notes).
 3. Read up to 5 older PDFs listed in data/ibja_backfill_urls.txt that have
    not been read yet (fills gaps and re-checks the transcribed history).
+4. Keep every downloaded PDF, unchanged, in data/raw/ibja/ (the original evidence).
 
 If IBJA cannot be reached the script prints a warning and exits 0, so the
 site still builds from the data already in the repository.
@@ -109,6 +110,17 @@ def merge(rows, new_rows, src, today):
     return log
 
 
+def archive(url, raw):
+    """Keep every downloaded IBJA PDF unchanged in data/raw/ibja/ (the original evidence)."""
+    name = os.path.basename(urllib.parse.unquote(urllib.parse.urlsplit(url).path)).replace(' ', '_')
+    folder = os.path.join(DATA, 'raw', 'ibja')
+    os.makedirs(folder, exist_ok=True)
+    path = os.path.join(folder, name)
+    if not os.path.exists(path):
+        with open(path, 'wb') as fh:
+            fh.write(raw)
+
+
 def read_list(path):
     if not os.path.exists(path):
         return []
@@ -165,7 +177,9 @@ def main():
         todo += [u for u in backfill if u not in done and u not in todo][:BACKFILL_PER_RUN]
         for url in todo:
             try:
-                new = pdf_rows(http_get(url))
+                raw = http_get(url)
+                archive(url, raw)
+                new = pdf_rows(raw)
             except Exception as e:
                 print(f'warning: could not read {url}: {e}')
                 continue

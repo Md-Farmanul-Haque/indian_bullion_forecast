@@ -17,6 +17,7 @@ sys.path.insert(0, os.path.join(ROOT, 'scripts'))
 import ibja  # noqa: E402
 import build_site_data as B  # noqa: E402
 import update_ibja as U  # noqa: E402
+import update_events as EV  # noqa: E402
 
 FULL = '16-Nov-26 | 134380 | 134971 | 133842 | 134431 | 123092 | 123633 | 100785 | 101228 | 78612 | 78958 | 169280 | 170251'
 
@@ -129,9 +130,9 @@ class Engine(unittest.TestCase):
 
     def test_scoring(self):
         ser = [(dt.date(2026, 1, 1) + dt.timedelta(days=i), 100 + i, 'PM', {}) for i in range(40)]
-        led = [{'made_on': '2026-01-01', 'recorded_utc': 'x', 'metal': 'gold22', 'target_date': '2026-01-31', 'session': 'PM',
+        led = [{'made_on': '2026-01-01', 'recorded_utc': 'x', 'metal': 'gold22', 'horizon_days': '30', 'target_date': '2026-01-31', 'session': 'PM',
                 'start_price': 100, 'low80': 90, 'high80': 140, 'low50': 95, 'high50': 120},
-               {'made_on': '2026-02-01', 'recorded_utc': 'x', 'metal': 'gold22', 'target_date': '2026-03-03', 'session': 'PM',
+               {'made_on': '2026-02-01', 'recorded_utc': 'x', 'metal': 'gold22', 'horizon_days': '30', 'target_date': '2026-03-03', 'session': 'PM',
                 'start_price': 100, 'low80': 90, 'high80': 110, 'low50': 95, 'high50': 105}]
         out = B.score_ledger(led, {'gold22': ser})
         self.assertEqual(out[0]['status'], 'checked')
@@ -177,13 +178,17 @@ class RealData(unittest.TestCase):
             site, new = B.build(record=True, today=last + dt.timedelta(days=30))
             self.assertEqual(new, [], 'stale data must not create a forecast')
             site, new = B.build(record=True, today=last + dt.timedelta(days=1))
-            self.assertEqual(len(new), 3)
+            self.assertEqual(len(new), 3 * len(B.HORIZONS))
             site, again = B.build(record=True, today=last + dt.timedelta(days=1))
             self.assertEqual(again, [], 'no duplicates')
             for k, m in site['metals'].items():
-                f = m['forecast']
-                self.assertLess(f['low80'], m['latest']['price'])
-                self.assertGreater(f['high80'], m['latest']['price'])
+                widths = []
+                for h in B.HORIZONS:
+                    f = m['forecasts'][h['key']]
+                    self.assertLess(f['low80'], m['latest']['price'])
+                    self.assertGreater(f['high80'], m['latest']['price'])
+                    widths.append(f['high80'] - f['low80'])
+                self.assertEqual(widths, sorted(widths), 'further ahead must be wider')
         finally:
             B.DATA = old
             shutil.rmtree(tmp)
@@ -200,6 +205,85 @@ class RealData(unittest.TestCase):
         for e in events:
             self.assertTrue(e['source']['url'].startswith('https://'))
             self.assertLessEqual(e['start'], e['end'])
+
+
+class Horizons(unittest.TestCase):
+    def test_wider_with_time(self):
+        w = [B.make_range(100, 0.01, h['trading'])['high80'] for h in B.HORIZONS]
+        self.assertEqual(w, sorted(w))
+
+    def test_one_week_calibrated_on_random_walk(self):
+        rnd = random.Random(3)
+        d, p, ser = dt.date(2000, 1, 3), 100000.0, []
+        while len(ser) < 6000:
+            if d.weekday() < 5:
+                ser.append((d, p, 'PM', {}))
+                p *= math.exp(rnd.gauss(0, 0.01))
+            d += dt.timedelta(days=1)
+        bt = B.backtest(ser, B.moves(ser), B.H_BY_DAYS[7])
+        self.assertTrue(0.75 <= bt['hit80'] / bt['n'] <= 0.86, bt['hit80'] / bt['n'])
+
+    def test_status_labels(self):
+        ser = [(dt.date(2026, 1, 1) + dt.timedelta(days=i), 100 + (i % 3), 'PM', {}) for i in range(60)]
+        bt = B.backtest(ser, B.moves(ser), B.H_BY_DAYS[91])
+        self.assertEqual(bt['status'], 'untested')
+
+    def test_old_ledger_is_upgraded_without_changing_values(self):
+        tmp = tempfile.mkdtemp()
+        try:
+            path = os.path.join(tmp, 'f.csv')
+            old_cols = [c for c in B.LEDGER_COLS if c != 'horizon_days']
+            with open(path, 'w', encoding='utf-8') as fh:
+                fh.write(','.join(old_cols) + '\n')
+                fh.write('2026-11-20,2026-11-22T10:00:00Z,gold22,124000,PM,2026-12-20,115000,133000,119000,128000,0.0115,60,v1-zero-trend-60d\n')
+            B.append_ledger(path, [{'made_on': '2026-11-23', 'recorded_utc': 'y', 'metal': 'gold22', 'horizon_days': 7, 'start_price': 1,
+                                    'session': 'PM', 'target_date': '2026-11-30', 'low80': 1, 'high80': 2, 'low50': 1, 'high50': 2,
+                                    'sigma_daily': '0.01', 'moves_used': 60, 'method': 'v1'}])
+            rows = B.read_ledger(path)
+            self.assertEqual(rows[0]['horizon_days'], '30')
+            self.assertEqual(rows[0]['low80'], '115000')
+            self.assertEqual(rows[1]['horizon_days'], '7')
+            with open(path, encoding='utf-8') as fh:
+                self.assertEqual(fh.readline().strip().split(','), B.LEDGER_COLS)
+        finally:
+            shutil.rmtree(tmp)
+
+
+class Events(unittest.TestCase):
+    def test_parse_fed_calendar(self):
+        html = ('<h4>2027 FOMC Meetings</h4><div class="fomc-meeting__month"><strong>January</strong></div>'
+                '<div class="fomc-meeting__date">26-27</div><div class="fomc-meeting__month"><strong>March</strong></div>'
+                '<div class="fomc-meeting__date">16-17*</div><div class="fomc-meeting__month"><strong>April/May</strong></div>'
+                '<div class="fomc-meeting__date">30-1</div><h4>2026 FOMC Meetings</h4><div><strong>December</strong></div><div>8-9*</div>')
+        got = EV.parse_fed(html)
+        self.assertIn((dt.date(2027, 1, 26), dt.date(2027, 1, 27)), got)
+        self.assertIn((dt.date(2027, 3, 16), dt.date(2027, 3, 17)), got)
+        self.assertIn((dt.date(2026, 12, 8), dt.date(2026, 12, 9)), got)
+        self.assertEqual(len(got), 3)
+
+    def test_parse_rbi(self):
+        rss = ('<rss><item><title>Meeting Schedule of the Monetary Policy Committee for 2027-28</title><link>https://rbi.org.in/x?prid=1</link></item>'
+               '<item><title>Money Market Operations</title><link>https://rbi.org.in/y</link></item></rss>')
+        self.assertEqual(EV.parse_rbi_rss(rss), ['https://rbi.org.in/x?prid=1'])
+        page = '<td>April 6, 7 and 8, 2026</td><td>December 2, 3 and 4, 2026</td><td>February 3, 4 and 5, 2027</td>'
+        self.assertEqual(EV.parse_rbi_schedule(page), [(dt.date(2026, 4, 6), dt.date(2026, 4, 8)),
+                                                       (dt.date(2026, 12, 2), dt.date(2026, 12, 4)),
+                                                       (dt.date(2027, 2, 3), dt.date(2027, 2, 5))])
+
+    def test_manual_events_win(self):
+        man = [{'kind': 'fed_fomc', 'start': '2026-12-08', 'end': '2026-12-09', 'en': {'title': 'A'}}]
+        auto = [{'kind': 'fed_fomc', 'start': '2026-12-08', 'end': '2026-12-09', 'en': {'title': 'B'}},
+                {'kind': 'fed_fomc', 'start': '2027-03-16', 'end': '2027-03-17', 'en': {'title': 'C'}}]
+        got = B.merge_events(man, auto)
+        self.assertEqual([e['en']['title'] for e in got], ['A', 'C'])
+
+    def test_duty_day_outcome_matches_ibja(self):
+        rows = ibja.read_csv(os.path.join(ROOT, 'data', 'ibja_daily.csv'))
+        sers = {'gold24': B.series(rows, 'g999'), 'silver': B.series(rows, 's999')}
+        ev = [{'start': '2026-05-13', 'end': '2026-05-13', 'en': {'title': 'duty'}, 'source': {}}]
+        out = B.event_outcomes(ev, sers)
+        g = out[0]['moves']['gold24']
+        self.assertEqual((g['before'], g['after']), (151632, 160977))
 
 
 class Hygiene(unittest.TestCase):

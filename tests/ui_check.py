@@ -1,7 +1,7 @@
 """Browser check of the simple site: loads it at phone and desktop size, fails on
 JavaScript errors or empty key fields, exercises the bill checker and the source sheets.
 Usage: python3 tests/ui_check.py [SITE_DIR] [--shots OUT_DIR]"""
-import asyncio, functools, http.server, os, socketserver, sys, threading
+import asyncio, functools, http.server, json, os, socketserver, sys, threading
 
 ROOT = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('--') else os.path.join(os.path.dirname(__file__), '..'))
 SHOTS = sys.argv[sys.argv.index('--shots') + 1] if '--shots' in sys.argv else None
@@ -31,9 +31,27 @@ async def run():
             pg.on('console', lambda m: m.type == 'error' and errors.append(f'{name}: console {m.text}'))
             await pg.goto(f'{url}?metal={metal}')
             await pg.wait_for_selector('#today:not([hidden])', timeout=15000)
-            for sel in ['#t-price', '#n-low', '#n-high', '#r-score', '#w-price', '#h-then', '#a-where']:
+            for sel in ['#t-price', '#n-low', '#n-high', '#r-table', '#w-price', '#o-sub', '#a-where', '#t-checked']:
                 txt = (await pg.text_content(sel) or '').strip()
                 assert txt and txt not in ('–', '₹NaN'), f'{name}: {sel} empty ({txt!r})'
+            for i in range(4):  # every time span gives a range
+                await pg.evaluate(f"(()=>{{const s=document.getElementById('n-h'); s.value={i}; s.dispatchEvent(new Event('input'))}})()")
+                lo, hi = await pg.text_content('#n-low'), await pg.text_content('#n-high')
+                assert lo.startswith('₹') and hi.startswith('₹') and lo != hi, f'{name}: span {i} range {lo} {hi}'
+            await pg.evaluate("(()=>{const s=document.getElementById('n-h'); s.value=2; s.dispatchEvent(new Event('input'))})()")
+            for r in ['1m', '1y', 'all', '6m']:
+                await pg.click(f'#o-range [data-r="{r}"]')
+                assert await pg.evaluate("document.querySelectorAll('#o-chart svg path').length") >= 1, f'{name}: old prices {r}'
+            await pg.fill('#o-date', '2026-10-28')
+            assert '₹' in (await pg.text_content('#o-out')), f'{name}: date lookup'
+            gaps = json.load(open(os.path.join(ROOT, 'data', 'site.json')))['metals'][metal]['gaps']
+            import datetime as _dt
+            long_gaps = [g for g in gaps if (_dt.date.fromisoformat(g[1]) - _dt.date.fromisoformat(g[0])).days > 10]
+            if long_gaps:
+                await pg.fill('#o-date', (_dt.date.fromisoformat(long_gaps[0][0]) + _dt.timedelta(days=8)).isoformat())
+                assert 'gap' in (await pg.text_content('#o-out')), f'{name}: gap lookup'
+            await pg.fill('#o-date', '2001-06-01')
+            assert '2001-02' in (await pg.text_content('#o-out')), f'{name}: yearly lookup'
             await pg.fill('#b-weight', '10'); await pg.fill('#b-making', '12'); await pg.fill('#b-total', '150000')
             res = await pg.text_content('#b-result')
             assert '₹' in res and 'NaN' not in res, f'{name}: bill result {res!r}'

@@ -1,5 +1,188 @@
 [
   {
+    "kind": "fed_fomc",
+    "start": "2025-12-09",
+    "end": "2025-12-10",
+    "status": "confirmed",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "US interest rates move the world gold price, which Indian prices follow. Big surprises can move prices a lot in a day."
+    },
+    "source": {
+      "name": "Federal Reserve: FOMC meeting calendars",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    }
+  },
+  {
+    "kind": "fed_fomc",
+    "start": "2026-01-27",
+    "end": "2026-01-28",
+    "status": "confirmed",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "US interest rates move the world gold price, which Indian prices follow. Big surprises can move prices a lot in a day."
+    },
+    "source": {
+      "name": "Federal Reserve: FOMC meeting calendars",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    }
+  },
+  {
+    "kind": "fed_fomc",
+    "start": "2026-03-17",
+    "end": "2026-03-18",
+    "status": "confirmed",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "US interest rates move the world gold price, which Indian prices follow. Big surprises can move prices a lot in a day."
+    },
+    "source": {
+      "name": "Federal Reserve: FOMC meeting calendars",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    }
+  },
+  {
+    "kind": "rbi_mpc",
+    "start": "2026-04-06",
+    "end": "2026-04-08",
+    "status": "confirmed",
+    "en": {
+      "title": "RBI interest-rate decision",
+      "meaning": "RBI decides interest rates. A change can move the rupee, and a weaker rupee makes gold dearer here. Nobody knows the decision in advance."
+    },
+    "source": {
+      "name": "RBI: MPC meeting schedule 2026-27",
+      "url": "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=62422"
+    }
+  },
+  {
+    "kind": "fed_fomc",
+    "start": "2026-04-28",
+    "end": "2026-04-29",
+    "status": "confirmed",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "US interest rates move the world gold price, which Indian prices follow. Big surprises can move prices a lot in a day."
+    },
+    "source": {
+      "name": "Federal Reserve: FOMC meeting calendars",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    }
+  },
+  {
+    "kind": "duty",
+    "start": "2026-05-13",
+    "end": "2026-05-13",
+    "status": "confirmed",
+    "en": {
+      "title": "Import duty raised from 6% to 15%",
+      "meaning": "The government raised the import duty on gold and silver. Prices here rose the same day."
+    },
+    "source": {
+      "name": "News On AIR (Prasar Bharati): Government raises import duty on gold and precious metals",
+      "url": "https://newsonair.gov.in/government-raises-import-duty-on-gold-and-precious-metals-from-today"
+    }
+  },
+  {
+    "kind": "rbi_mpc",
+    "start": "2026-06-03",
+    "end": "2026-06-05",
+    "status": "confirmed",
+    "en": {
+      "title": "RBI interest-rate decision",
+      "meaning": "RBI decides interest rates. A change can move the rupee, and a weaker rupee makes gold dearer here. Nobody knows the decision in advance."
+    },
+    "source": {
+      "name": "RBI: MPC meeting schedule 2026-27",
+      "url": "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=62422"
+    }
+  },
+  {
+    "kind": "fed_fomc",
+    "start": "2026-06-16",
+    "end": "2026-06-17",
+    "status": "confirmed",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "US interest rates move the world gold price, which Indian prices follow. Big surprises can move prices a lot in a day."
+    },
+    "source": {
+      "name": "Federal Reserve: FOMC meeting calendars",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    }
+  },
+  {
+    "kind": "fed_fomc",
+    "start": "2026-07-28",
+    "end": "2026-07-29",
+    "status": "confirmed",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "US interest rates move the world gold price, which Indian prices follow. Big surprises can move prices a lot in a day."
+    },
+    "source": {
+      "name": "Federal Reserve: FOMC meeting calendars",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    }
+  },
+  {
+    "kind": "rbi_mpc",
+    "start": "2026-08-03",
+    "end": "2026-08-05",
+    "status": "confirmed",
+    "en": {
+      "title": "RBI interest-rate decision",
+      "meaning": "RBI decides interest rates. A change can move the rupee, and a weaker rupee makes gold dearer here. Nobody knows the decision in advance."
+    },
+    "source": {
+      "name": "RBI: MPC meeting schedule 2026-27",
+      "url": "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=62422"
+    }
+  },
+  {
+    "kind": "fed_fomc",
+    "start": "2026-09-15",
+    "end": "2026-09-16",
+    "status": "confirmed",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "US interest rates move the world gold price, which Indian prices follow. Big surprises can move prices a lot in a day."
+    },
+    "source": {
+      "name": "Federal Reserve: FOMC meeting calendars",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    }
+  },
+  {
+    "kind": "rbi_mpc",
+    "start": "2026-10-05",
+    "end": "2026-10-07",
+    "status": "confirmed",
+    "en": {
+      "title": "RBI interest-rate decision",
+      "meaning": "RBI decides interest rates. A change can move the rupee, and a weaker rupee makes gold dearer here. Nobody knows the decision in advance."
+    },
+    "source": {
+      "name": "RBI: MPC meeting schedule 2026-27",
+      "url": "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=62422"
+    }
+  },
+  {
+    "kind": "fed_fomc",
+    "start": "2026-10-27",
+    "end": "2026-10-28",
+    "status": "confirmed",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "US interest rates move the world gold price, which Indian prices follow. Big surprises can move prices a lot in a day."
+    },
+    "source": {
+      "name": "Federal Reserve: FOMC meeting calendars",
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+    }
+  },
+  {
+    "kind": "rbi_mpc",
     "start": "2026-12-02",
     "end": "2026-12-04",
     "status": "confirmed",
@@ -13,6 +196,7 @@
     }
   },
   {
+    "kind": "fed_fomc",
     "start": "2026-12-08",
     "end": "2026-12-09",
     "status": "confirmed",
@@ -26,6 +210,7 @@
     }
   },
   {
+    "kind": "fed_fomc",
     "start": "2027-01-26",
     "end": "2027-01-27",
     "status": "tentative",
@@ -39,12 +224,13 @@
     }
   },
   {
+    "kind": "budget",
     "start": "2027-02-01",
     "end": "2027-02-01",
     "status": "date not announced",
     "en": {
       "title": "Union Budget 2027-28",
-      "meaning": "Import duty on gold and silver is often changed in the Budget. A duty change moves prices here on the same day. In recent years the Budget has been presented on 1 February; this year's date is not announced yet."
+      "meaning": "Import duty on gold and silver is often changed in the Budget, and a duty change moves prices here the same day. In recent years the Budget has been presented on 1 February; this year's date is not announced yet."
     },
     "source": {
       "name": "Union Budget (Government of India)",
@@ -52,6 +238,7 @@
     }
   },
   {
+    "kind": "rbi_mpc",
     "start": "2027-02-03",
     "end": "2027-02-05",
     "status": "confirmed",

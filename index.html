@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Gold &amp; Silver Price Guide (Kolkata)</title>
-<meta name="description" content="Today's IBJA gold and silver reference price, an honest one-month range with its track record, and a jewellery bill checker. Free, official sources, no ads.">
+<meta name="description" content="Today's IBJA gold and silver reference price, honest price ranges with their track record, and a jewellery bill checker. Free, official sources, no ads.">
 <meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <link rel="manifest" href="manifest.webmanifest">
@@ -13,22 +13,23 @@
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="brand">
-    <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#d4a017"/><circle cx="16" cy="16" r="10" fill="none" stroke="#fff6d5" stroke-width="2"/><path d="M11 17l3.5 3.5L21.5 12" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <div><div class="brand-name" data-t="appName"></div><div class="brand-sub" data-t="appSub"></div></div>
+<div class="bar">
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#d4a017"/><circle cx="16" cy="16" r="10" fill="none" stroke="#fff6d5" stroke-width="2"/><path d="M11 17l3.5 3.5L21.5 12" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div><div class="brand-name" data-t="appName"></div><div class="brand-sub" data-t="appSub"></div></div>
+    </div>
+  </header>
+  <div class="picker">
+    <div class="seg seg-metal" role="tablist" aria-label="Metal">
+      <button type="button" role="tab" data-metal="gold22" data-t="m_gold22"></button>
+      <button type="button" role="tab" data-metal="gold24" data-t="m_gold24"></button>
+      <button type="button" role="tab" data-metal="silver" data-t="m_silver"></button>
+    </div>
+    <nav class="chips" aria-label="Sections">
+      <a href="#today" data-t="nav_today"></a><a href="#old" data-t="nav_old"></a><a href="#next" data-t="nav_next"></a><a href="#record" data-t="nav_record"></a><a href="#bill" data-t="nav_bill"></a><a href="#why" data-t="nav_why"></a><a href="#dates" data-t="nav_dates"></a><a href="#tips" data-t="nav_tips"></a><a href="#about" data-t="nav_about"></a>
+    </nav>
   </div>
-</header>
-
-<div class="picker">
-  <div class="seg seg-metal" role="tablist" aria-label="Metal">
-    <button type="button" role="tab" data-metal="gold22" data-t="m_gold22"></button>
-    <button type="button" role="tab" data-metal="gold24" data-t="m_gold24"></button>
-    <button type="button" role="tab" data-metal="silver" data-t="m_silver"></button>
-  </div>
-  <nav class="chips" aria-label="Sections">
-    <a href="#today" data-t="nav_today"></a><a href="#next" data-t="nav_next"></a><a href="#record" data-t="nav_record"></a><a href="#bill" data-t="nav_bill"></a><a href="#why" data-t="nav_why"></a><a href="#dates" data-t="nav_dates"></a><a href="#tips" data-t="nav_tips"></a><a href="#history" data-t="nav_history"></a><a href="#about" data-t="nav_about"></a>
-  </nav>
 </div>
 
 <main id="main">
@@ -46,80 +47,104 @@
     </div>
     <div class="change" id="t-change"></div>
     <p class="note" data-t="today_note"></p>
+    <p class="fine" id="t-checked"></p>
+  </section>
+
+  <section class="card" id="old" hidden>
+    <div class="card-head"><h2 data-t="old_title"></h2><button class="src" data-src="old" type="button"></button></div>
+    <div class="seg seg-wide" id="o-range" role="group" aria-label="Time range">
+      <button type="button" data-r="1m" data-t="r_1m"></button><button type="button" data-r="6m" data-t="r_6m"></button><button type="button" data-r="1y" data-t="r_1y"></button><button type="button" data-r="all" data-t="r_all"></button>
+    </div>
+    <p class="note" id="o-sub"></p>
+    <div class="chart" id="o-chart" role="img"></div>
+    <p class="note" id="o-foot"></p>
+    <div class="lookup">
+      <label for="o-date"><b data-t="lookup_title"></b><span class="hint" data-t="lookup_hint"></span></label>
+      <input type="date" id="o-date" min="1970-04-01">
+      <p class="lookup-out" id="o-out" aria-live="polite"></p>
+    </div>
   </section>
 
   <section class="card" id="next" hidden>
     <div class="card-head"><h2 data-t="next_title"></h2><button class="src" data-src="next" type="button"></button></div>
+    <label class="lbl" for="n-h" data-t="next_pick"></label>
+    <div class="hslider">
+      <input type="range" id="n-h" min="0" max="3" step="1" value="2">
+      <div class="hticks" id="n-ticklabels"></div>
+    </div>
     <p class="lead" id="n-lead"></p>
-    <div class="range-big"><span id="n-low"></span><span class="dash" id="n-and"></span><span id="n-high"></span></div>
-    <div class="chance"><span class="dots" id="n-dots" aria-hidden="true"></span><span data-t="chance80"></span></div>
-    <div class="rangebar" id="n-bar" aria-hidden="true"></div>
+    <div class="range-big"><span id="n-low"></span><span class="dash" data-t="next_and"></span><span id="n-high"></span></div>
+    <div class="chance"><span class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span><span data-t="chance80"></span></div>
+    <div class="numline" id="n-line"></div>
     <p class="sub50"><span data-t="next_50"></span> <b id="n-50"></b></p>
+    <div class="warn" id="n-warn" hidden></div>
+    <p class="score-line" id="n-score"></p>
     <div class="chart" id="n-chart" role="img"></div>
     <div class="legend" id="n-legend"></div>
+    <p class="fine" data-t="chart_hint"></p>
     <p class="callout" data-t="next_updown"></p>
-    <p class="note" id="n-means"></p>
     <details><summary data-t="next_how"></summary><p id="n-how"></p></details>
   </section>
 
   <section class="card" id="record" hidden>
     <div class="card-head"><h2 data-t="record_title"></h2><button class="src" data-src="record" type="button"></button></div>
     <p class="note" data-t="record_goal"></p>
-    <div class="rec-live"><h3 data-t="record_live"></h3><p id="r-live"></p></div>
-    <div class="rec-past">
-      <h3 data-t="record_past"></h3>
-      <div class="score"><span class="score-num" id="r-score"></span><span class="score-pct" id="r-pct"></span></div>
-      <div class="score-txt" data-t="record_past_text"></div>
-      <div class="strip" id="r-strip" role="img"></div>
-      <div class="legend"><span><i class="mk hit"></i><span data-t="legend_hit"></span></span><span><i class="mk miss"></i><span data-t="legend_miss"></span></span></div>
-      <p class="callout" id="r-verdict"></p>
-      <p class="note" id="r-50"></p>
-      <p class="note" id="r-note"></p>
-    </div>
+    <div class="tbl rec-tbl" id="r-table"></div>
+    <p class="note" id="r-strip-title"></p>
+    <div class="strip" id="r-strip" role="img"></div>
+    <div class="legend"><span><i class="mk hit"></i><span data-t="legend_hit"></span></span><span><i class="mk miss"></i><span data-t="legend_miss"></span></span></div>
+    <p class="callout" id="r-verdict"></p>
+    <p class="fine" data-t="record_note"></p>
   </section>
 
   <section class="card" id="bill" hidden>
     <div class="card-head"><h2 data-t="bill_title"></h2><button class="src" data-src="bill" type="button"></button></div>
     <p class="note" data-t="bill_intro"></p>
-    <label class="lbl" data-t="bill_metal"></label>
+    <span class="lbl" data-t="bill_metal"></span>
     <div class="pills" id="b-purity">
       <button type="button" data-p="g916" data-t="p_g916"></button><button type="button" data-p="g750" data-t="p_g750"></button><button type="button" data-p="g585" data-t="p_g585"></button><button type="button" data-p="g999" data-t="p_g999"></button><button type="button" data-p="s999" data-t="p_s999"></button><button type="button" data-p="s925" data-t="p_s925"></button>
     </div>
-    <div class="row2">
-      <label><span class="lbl" data-t="bill_weight"></span><input id="b-weight" type="number" inputmode="decimal" min="0" step="0.001" placeholder="10"></label>
-      <label><span class="lbl" data-t="bill_making"></span><input id="b-making" type="number" inputmode="decimal" min="0" step="0.01" placeholder="12"></label>
+    <label class="lbl" for="b-weight" data-t="bill_weight"></label>
+    <input id="b-weight" type="number" inputmode="decimal" min="0" step="0.001" placeholder="e.g. 10">
+    <label class="lbl" for="b-making" data-t="bill_making"></label>
+    <div class="combo">
+      <input id="b-making" type="number" inputmode="decimal" min="0" step="0.01" placeholder="e.g. 12">
+      <div class="seg seg-sm" id="b-mode" role="group" aria-label="Making charge unit"><button type="button" data-mode="pct" data-t="mk_pct"></button><button type="button" data-mode="perGram" data-t="mk_pg"></button></div>
     </div>
-    <div class="seg seg-sm seg-wide" id="b-mode"><button type="button" data-mode="pct" data-t="mk_pct"></button><button type="button" data-mode="perGram" data-t="mk_pg"></button></div>
-    <label><span class="lbl" data-t="bill_total_in"></span><input id="b-total" type="number" inputmode="decimal" min="0" step="1" placeholder="₹"></label>
+    <p class="hint" data-t="bill_making_hint"></p>
+    <label class="lbl" for="b-total" data-t="bill_total_in"></label>
+    <input id="b-total" type="number" inputmode="decimal" min="0" step="1" placeholder="₹ e.g. 1,40,000">
+    <p class="hint" data-t="bill_total_hint"></p>
     <div class="result" id="b-result"></div>
-    <p class="note" id="b-rate"></p>
+    <p class="fine" id="b-rate"></p>
     <p class="callout" data-t="bill_gst_note"></p>
   </section>
 
   <section class="card" id="why" hidden>
     <div class="card-head"><h2 data-t="why_title"></h2><button class="src" data-src="why" type="button"></button></div>
-    <p class="note" data-t="why_formula"></p>
-    <div class="formula">
-      <div><span class="ic">🌍</span><span data-t="f_world"></span></div><b>×</b>
-      <div><span class="ic">💱</span><span data-t="f_rupee"></span></div><b>×</b>
-      <div><span class="ic">🛃</span><span data-t="f_duty"></span></div><b>=</b>
-      <div class="f-out"><span class="ic">🏪</span><span data-t="f_here"></span></div>
-    </div>
-    <h3 data-t="why_try"></h3>
-    <div class="slider"><div class="sl-top"><span data-t="s_world"></span><b id="w-world-v"></b></div><input id="w-world" type="range" min="-20" max="20" step="1" value="0"></div>
-    <div class="slider"><div class="sl-top"><span data-t="s_rupee"></span><b id="w-rupee-v"></b></div><input id="w-rupee" type="range" min="-10" max="10" step="1" value="0"></div>
-    <div class="slider"><div class="sl-top"><span data-t="s_duty"></span><b id="w-duty-v"></b></div><input id="w-duty" type="range" min="0" max="20" step="0.5" value="15"></div>
-    <div class="whatif"><span id="w-label"></span><b id="w-price"></b><span id="w-pct"></span></div>
-    <p class="note" data-t="why_note"></p>
-    <h3 data-t="why_example"></h3>
-    <p id="w-example"></p>
-    <p class="note" data-t="why_research"></p>
+    <p class="note" data-t="why_intro"></p>
+    <ul class="tips">
+      <li><span class="ic">🌍</span><div><b data-t="why_1t"></b><p data-t="why_1"></p></div></li>
+      <li><span class="ic">💵</span><div><b data-t="why_2t"></b><p data-t="why_2"></p></div></li>
+      <li><span class="ic">🏛️</span><div><b data-t="why_3t"></b><p data-t="why_3"></p></div></li>
+    </ul>
+    <p class="callout" id="w-example"></p>
+    <details id="w-try"><summary data-t="why_try"></summary>
+      <div class="slider"><div class="sl-top"><span data-t="s_world"></span><b id="w-world-v"></b></div><input id="w-world" type="range" min="-20" max="20" step="1" value="0"><div class="sl-ends"><span data-t="s_cheaper"></span><span data-t="s_dearer"></span></div></div>
+      <div class="slider"><div class="sl-top"><span data-t="s_rupee"></span><b id="w-rupee-v"></b></div><input id="w-rupee" type="range" min="-10" max="10" step="1" value="0"><div class="sl-ends"><span data-t="s_weaker"></span><span data-t="s_stronger"></span></div></div>
+      <div class="slider"><div class="sl-top"><span data-t="s_duty"></span><b id="w-duty-v"></b></div><input id="w-duty" type="range" min="0" max="20" step="0.5" value="15"><div class="sl-ends"><span>0%</span><span>20%</span></div></div>
+      <div class="whatif"><span id="w-label"></span><b id="w-price"></b><span id="w-pct"></span></div>
+      <p class="fine" data-t="why_note"></p>
+    </details>
+    <p class="fine" data-t="why_research"></p>
   </section>
 
   <section class="card" id="dates" hidden>
-    <div class="card-head"><h2 data-t="dates_title"></h2></div>
+    <div class="card-head"><h2 data-t="dates_title"></h2><button class="src" data-src="dates" type="button"></button></div>
     <p class="note" data-t="dates_note"></p>
     <ul class="events" id="d-list"></ul>
+    <details><summary data-t="dates_past"></summary><div class="tbl" id="d-past"></div><p class="fine" data-t="dates_past_note"></p></details>
+    <p class="fine" data-t="dates_auto"></p>
   </section>
 
   <section class="card" id="tips" hidden>
@@ -132,20 +157,13 @@
     </ul>
   </section>
 
-  <section class="card" id="history" hidden>
-    <div class="card-head"><h2 data-t="hist_title"></h2><button class="src" data-src="history" type="button"></button></div>
-    <p class="note" data-t="hist_sub"></p>
-    <p class="lead" id="h-then"></p>
-    <div class="chart" id="h-chart" role="img"></div>
-    <p class="note" data-t="hist_note"></p>
-  </section>
-
   <section class="card" id="about" hidden>
     <div class="card-head"><h2 data-t="about_title"></h2></div>
     <details open><summary data-t="a_where"></summary><p id="a-where"></p></details>
     <details><summary data-t="a_check"></summary><p id="a-check1"></p><p id="a-check2"></p><div class="tbl" id="a-sgb"></div><p id="a-check3"></p></details>
     <details><summary data-t="a_gaps"></summary><ul id="a-gaps"></ul><p class="note" data-t="a_gaps_text"></p></details>
     <details><summary data-t="a_method"></summary><p id="a-method"></p></details>
+    <details><summary data-t="a_data"></summary><p data-t="a_data_text"></p></details>
     <details><summary data-t="a_not"></summary><p data-t="a_not_text"></p></details>
     <details><summary data-t="a_sources"></summary><ul class="srclist" id="a-sources"></ul></details>
     <details><summary data-t="a_analyst"></summary><p data-t="a_analyst_text"></p>
@@ -157,7 +175,7 @@
         <li><a href="data/site.json" data-t="a_json"></a></li>
       </ul>
     </details>
-    <p class="note" id="a-updated"></p>
+    <p class="fine" id="a-updated"></p>
   </section>
 </main>
 
