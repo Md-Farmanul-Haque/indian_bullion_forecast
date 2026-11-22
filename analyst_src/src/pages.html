@@ -1,0 +1,106 @@
+<!--NAV-->
+  <div class="navsep">Monitor &amp; forecast</div>
+  <button data-page="live">Live Monitor</button>
+  <button data-page="forecast">Forecast</button>
+  <button data-page="matrix">Scenario Matrix</button>
+  <button data-page="accuracy">Accuracy Lab</button>
+  <button data-page="caveats">Caveats &amp; Audit</button>
+  <div class="navsep">History (SSOT)</div>
+<!--/NAV-->
+<!--GBAR-->
+  <div class="gbar" id="gbar">
+    <div class="sl"><span>Data mode</span><button id="modeA" data-mode="A" title="SSOT plus user inputs only; every live value blank">A · Pure SSOT</button><button id="modeB" data-mode="B" title="SSOT plus quarantined live overlay">B · SSOT + Live</button></div>
+    <div class="sl"><span>Theme</span><button id="themeBtn">Dark</button></div>
+    <div class="lstat" id="liveStatus"></div>
+  </div>
+  <div class="cvstrip" id="cvstrip"><b>Always applies:</b> RBI 2000-01 series break (BBA/PTI before; IBJA/LBMA/Reuters/IMF-IFS after) · † 1950s RCF 1958-59 figures read on a non-government mirror · RBI "Standard Gold" purity not stated · [NG] Q3 2026 domestic discount (~US$43/oz) and ~50 t unofficial inflows · [L] duty split 10% BCD + 5% AIDC · INR/USD 94.71 is DERIVED · Projections are scenario-conditioned, not financial advice.</div>
+<!--/GBAR-->
+<!--PAGES-->
+  <section class="page" id="p-live">
+    <div class="banner warn" id="liveGate"></div>
+    <div class="card"><h2>Load live files <span class="tag">Mode B only</span></h2>
+      <p class="d">Live data stays in a quarantined LIVE_OVERLAY and never writes into SSOT_DB. Load <code>live_signals.json</code> and <code>live_history.json</code> from <code>fetch_signals.py</code>, by file or by pasting. Switching to Mode A clears every live value.</p>
+      <div class="tools">
+        <label class="fbtn">live_signals.json <input type="file" id="fSignals" accept=".json,application/json"></label>
+        <label class="fbtn">live_history.json <input type="file" id="fHistory" accept=".json,application/json"></label>
+        <button id="clearLive">Clear live data</button>
+      </div>
+      <div class="dropzone" id="dropZone">Drop either JSON file here</div>
+      <textarea id="pasteBox" rows="3" placeholder="…or paste the JSON of either file here"></textarea>
+      <div class="tools"><button id="pasteLoad">Load pasted JSON</button><span class="msg" id="loadMsg"></span></div>
+    </div>
+    <div class="card"><h2>Live nowcast</h2><p class="d">Quotes as received, with their stated basis. Indian prices are only compared with world prices of the same date and purity.</p><div class="tw"><table id="tb-live"></table></div></div>
+    <div class="grid2e">
+      <div class="card"><h2>Starting premium P0</h2><p class="d">P0 = Indian spot ÷ (world US$ × INR/USD × unit factor) − 1, computed by the fetcher at one timestamp and purity. The anchor already contains the duty in force on its date (15% since 13 May 2026).</p><div id="liveP0"></div></div>
+      <div class="card"><h2>Realised volatility (live)</h2><p class="d">From daily log-returns in live_history.json (window ≥ 60 returns, default 90). Needed for volatility mode (c).</p><div id="liveVol"></div></div>
+    </div>
+    <div class="card"><h2>Signal feed</h2><p class="d">Headlines enter the maths only if you map them to one of three channels (World USD %, INR/USD %, Premium pp) on the Scenario Matrix page, tagged [USER-ASSUMPTION].</p><div id="signals" class="evlist"></div></div>
+    <div class="card"><h2>SSOT gap updates and fetch log</h2><div id="gapUpd"></div></div>
+  </section>
+
+  <section class="page" id="p-forecast">
+    <div class="card"><h2>Forecast controls</h2>
+      <div class="ctrls">
+        <div class="sl"><span>Metal</span><button data-f="metal" data-v="gold">Gold</button><button data-f="metal" data-v="silver">Silver</button><button data-f="metal" data-v="ratio">Gold–silver ratio</button></div>
+        <div class="sl"><span>Horizon</span><button data-f="horizon" data-v="1W">1W</button><button data-f="horizon" data-v="1M">1M</button><button data-f="horizon" data-v="1Y">1Y</button></div>
+        <div class="sl"><span>Units</span><select id="fUnit"></select><select id="fPurity" title="Known-purity scaling only (999 ↔ 995)"></select></div>
+        <div class="sl"><span>Volatility</span><select id="fVol"><option value="a">(a) SSOT annual averages</option><option value="b">(b) √(3/2) de-smoothed [THEORETICAL — not SSOT]</option><option value="c">(c) Realised spot vol (live)</option></select><label class="chk"><input type="checkbox" id="fPremVar" checked> premium variance</label></div>
+        <div class="sl"><span>Trend</span><button data-f="trend" data-v="zero">Zero (default)</button><button data-f="trend" data-v="post1990">Post-1990 average</button></div>
+        <div class="sl"><span>Range</span><button data-f="dist" data-v="lognormal">Log-normal</button><button data-f="dist" data-v="empirical">Empirical (1Y)</button></div>
+        <div class="sl"><span>λ pass-through</span><label>1W <input type="number" id="lam1W" step="0.05" min="0" max="1"></label><label>1M <input type="number" id="lam1M" step="0.05" min="0" max="1"></label><label>1Y <input type="number" id="lam1Y" step="0.05" min="0" max="1"></label><span class="tag ua">[USER-ASSUMPTION — not SSOT-calibrated]</span></div>
+        <div class="sl"><span>History</span><button data-f="span" data-v="auto" title="1W/1M: last 150 days; 1Y: since 1946">Auto</button><button data-f="span" data-v="zoom">Last 150 days</button><button data-f="span" data-v="recent">2025 →</button><button data-f="span" data-v="long">1946 →</button><button data-f="fscale" data-v="log">Log</button><button data-f="fscale" data-v="linear">Linear</button></div>
+      </div>
+    </div>
+    <div class="banner block" id="fcBanner"></div>
+    <div class="kpis" id="fcKpis"></div>
+    <div class="card"><h2>Anchor, starting premium and shocks</h2>
+      <p class="d">1W and 1M need a current spot anchor (live in Mode B, or your entry with date and basis). 1Y may use a labelled SSOT benchmark. Shock inputs are % moves (entered as ln(1+x)) and premium offsets in percentage points; all are [USER-ASSUMPTION].</p>
+      <div class="tw tall"><table id="tb-anchor" class="inputs"></table></div>
+      <div class="tools"><span class="sl"><span>INR/USD change %</span><input type="number" id="fFx" step="0.1"></span><span class="tag ua">[USER-ASSUMPTION]</span></div>
+    </div>
+    <div class="card"><h2 id="t-fan">Projection fan joined to SSOT history</h2><p class="d" id="d-fan">Band: 10th–90th percentile range. Grey bands: GAP (no government figure). Vertical lines: regime markers.</p>
+      <div class="legend" id="lg-fan"></div><div class="chart" id="c-fan"></div></div>
+    <div class="grid2">
+      <div class="card"><h2>Waterfall: what moves the base case</h2><p class="d">Log-points (×100) per channel, converted to rupees step by step. World + rupee + duty pass-through + offsets + trend = total.</p><div class="chart" id="c-wf"></div></div>
+      <div class="card"><h2>Notes for this projection</h2><ul class="notes" id="fcNotes"></ul>
+        <div class="tools"><button id="saveFc">Save to live scorecard</button><button id="expFcJ">Forecast JSON</button><button id="expFcC">Forecast CSV</button><button id="expScJ">Scenario JSON</button><button id="expScC">Scenario CSV</button></div><span class="msg" id="fcMsg"></span></div>
+    </div>
+  </section>
+
+  <section class="page" id="p-matrix">
+    <div class="banner block" id="mxBanner"></div>
+    <div class="card"><h2>Illustrative presets</h2><p class="d">Neutral = your current Forecast anchor, P0, duty in force and λ with no shocks. Each preset changes only the listed channels from Neutral. Illustrative, not predictions. "Apply" replaces the Forecast shocks with the preset.</p>
+      <div class="tw"><table id="tb-presets"></table></div></div>
+    <div class="card"><h2>Custom factors <span class="tag ua">[USER-ASSUMPTION]</span></h2><p class="d">Map a headline or idea to one of three channels only. Each row shows its own log-point and rupee impact on the current base case; the total row combines them.</p>
+      <div class="tw"><table id="tb-custom" class="inputs"></table></div>
+      <div class="tools"><button id="mxAdd">Add factor</button><button id="mxApply">Add totals to Forecast inputs</button><button id="mxExpJ">Matrix JSON</button><button id="mxExpC">Matrix CSV</button><span class="msg" id="mxMsg"></span></div></div>
+  </section>
+
+  <section class="page" id="p-accuracy">
+    <div class="card"><h2>Achievability meter</h2>
+      <div class="ctrls"><div class="sl"><span>Tolerance ±%</span><input type="number" id="aTol" step="0.5" min="0.5" max="50"></div><div class="sl"><span>Target hit rate %</span><input type="number" id="aTgt" step="1" min="1" max="100"></div><div class="sl"><span>Metal</span><span id="aMetal" class="msg"></span></div></div>
+      <p class="d" id="aCaption"></p>
+      <div class="tw"><table id="tb-meter"></table></div></div>
+    <div class="card"><h2>Walk-forward backtest (§3.6)</h2><p class="d">Every forecast at date t uses only data up to t. M0 = no change (identical to the app's default zero-trend, no-shock forecast, so not reported separately). M1 = expanding-window average log-change × T. M2 = M1 + duty pass-through for duty changes already in force at t (λ defaults; equilibrium slope re-fitted on data up to t). M3 = range coverage of M1 with a rolling 10-year covariance ending at t. Every figure sits beside the no-change benchmark and its n.</p>
+      <div class="legend"><span><i style="background:var(--c0)"></i>Model</span><span><i style="background:var(--muted)"></i>No-change benchmark (M0)</span><span>* monthly averages vs monthly averages, not spot; indicative: small sample</span></div>
+      <div class="chart" id="c-acc"></div>
+      <div id="accTables"></div></div>
+    <div class="grid2e">
+      <div class="card"><h2>No-change benchmark, recomputed</h2><p class="d">Hit rate of "no change" within ±tolerance on SSOT averages (real spot hit rates are lower).</p><div class="tw"><table id="tb-naive"></table></div></div>
+      <div class="card"><h2>Yearly walk-forward errors</h2><p class="d">Actual ÷ forecast − 1 for each test year: M0 vs M1. Shaded: ±tolerance.</p><div class="chart" id="c-accerr"></div></div>
+    </div>
+    <div class="card"><h2>Live scorecard</h2><p class="d">Forecasts you save on the Forecast page are logged with anchor, horizon, range, inputs and time. When a later live_history.json contains the matching price, each is scored automatically. Summary figures appear only once the minimum sample is reached.</p>
+      <div id="scSum"></div>
+      <div class="tools"><button id="scExpJ">Scorecard JSON</button><button id="scExpC">Scorecard CSV</button><label class="fbtn">Import scorecard JSON <input type="file" id="scImp" accept=".json,application/json"></label><button id="scClear">Clear scorecard</button><span class="msg" id="scMsg"></span></div>
+      <div class="tw"><table id="tb-sc"></table></div></div>
+  </section>
+
+  <section class="page" id="p-caveats">
+    <div class="card notes"><h2>Caveats that always apply</h2><ul id="cvList"></ul></div>
+    <div class="grid2e">
+      <div class="card notes"><h2>Data integrity (anchor checksums)</h2><ul id="cvIntegrity"></ul></div>
+      <div class="card notes"><h2>Open GAPs (kept null, never filled)</h2><ul id="cvGaps"></ul></div>
+    </div>
+    <div class="card"><h2>Audit log</h2><div id="auditBox"></div></div>
+  </section>
+<!--/PAGES-->

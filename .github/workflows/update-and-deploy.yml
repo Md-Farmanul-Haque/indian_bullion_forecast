@@ -1,0 +1,95 @@
+name: Update prices and publish site
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    # 13:15 UTC = 18:45 IST, Monday to Friday, after IBJA's evening (PM) rate
+    - cron: "15 13 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: update-and-deploy
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pdfplumber requests reportlab playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Fetch the newest IBJA rates
+        # If IBJA cannot be reached, the site is still built from the data already saved.
+        continue-on-error: true
+        run: python scripts/update_ibja.py
+
+      - name: Build site data and save today's ranges to the public record
+        run: python scripts/build_site_data.py --record
+
+      - name: Tests
+        run: |
+          python -m unittest discover -s tests -p "test_*.py" -v
+          node tests/test_calc.js
+          node analyst_src/tests/ci_fixtures.js
+
+      - name: Save updated data to the repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/ibja_daily.csv data/ibja_sources.csv data/forecasts.csv
+          if git diff --cached --quiet; then
+            echo "No new data."
+          else
+            git commit -m "Daily price update $(TZ=Asia/Kolkata date +%Y-%m-%d)"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
+
+      - name: Assemble the website
+        run: |
+          mkdir -p _site/data/research _site/analyst
+          cp index.html sw.js manifest.webmanifest _site/
+          cp -r assets _site/
+          cp data/site.json data/ibja_daily.csv data/forecasts.csv data/ibja_sources.csv data/facts.json data/events.json _site/data/
+          cp data/research/* _site/data/research/
+          python analyst_src/src/build.py --audit analyst_src/audit/audit_log.json --out _site/analyst/index.html
+          touch _site/.nojekyll
+
+      - name: Browser check (phone and desktop)
+        run: python tests/ui_check.py _site
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

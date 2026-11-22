@@ -1,0 +1,67 @@
+[
+  {
+    "start": "2026-12-02",
+    "end": "2026-12-04",
+    "status": "confirmed",
+    "en": {
+      "title": "RBI interest-rate decision",
+      "meaning": "RBI decides interest rates. A change can move the rupee, and a weaker rupee makes gold dearer here. Nobody knows the decision in advance."
+    },
+    "source": {
+      "name": "RBI: MPC meeting schedule 2026-27",
+      "url": "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=62422"
+    }
+  },
+  {
+    "start": "2026-12-08",
+    "end": "2026-12-09",
+    "status": "confirmed",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "US interest rates move the world gold price, which Indian prices follow. Big surprises can move prices a lot in a day."
+    },
+    "source": {
+      "name": "Federal Reserve: December 2026 calendar",
+      "url": "https://www.federalreserve.gov/newsevents/2026-December.htm"
+    }
+  },
+  {
+    "start": "2027-01-26",
+    "end": "2027-01-27",
+    "status": "tentative",
+    "en": {
+      "title": "US Federal Reserve decision",
+      "meaning": "Same as above. The Fed calls its dates tentative until confirmed at the meeting before."
+    },
+    "source": {
+      "name": "Federal Reserve: 2027 FOMC schedule (12 Nov 2026)",
+      "url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261112a.htm"
+    }
+  },
+  {
+    "start": "2027-02-01",
+    "end": "2027-02-01",
+    "status": "date not announced",
+    "en": {
+      "title": "Union Budget 2027-28",
+      "meaning": "Import duty on gold and silver is often changed in the Budget. A duty change moves prices here on the same day. In recent years the Budget has been presented on 1 February; this year's date is not announced yet."
+    },
+    "source": {
+      "name": "Union Budget (Government of India)",
+      "url": "https://www.indiabudget.gov.in/"
+    }
+  },
+  {
+    "start": "2027-02-03",
+    "end": "2027-02-05",
+    "status": "confirmed",
+    "en": {
+      "title": "RBI interest-rate decision",
+      "meaning": "Same as the December decision: it can move the rupee, and so the gold price here."
+    },
+    "source": {
+      "name": "RBI: MPC meeting schedule 2026-27",
+      "url": "https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=62422"
+    }
+  }
+]

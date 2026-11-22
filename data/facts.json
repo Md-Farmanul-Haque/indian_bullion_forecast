@@ -1,0 +1,73 @@
+{
+  "checked_on": "2026-11-22",
+  "ibja": {
+    "en": "IBJA (India Bullion and Jewellers Association, Mumbai) publishes a morning (AM) and evening (PM) rate on business days. The Ministry of Finance and RBI use IBJA rates to price Sovereign Gold Bonds, and RBI rules use them to value jewellery for gold loans. Rates are without GST and making charges.",
+    "sources": [
+      {
+        "name": "IBJA: about IBJA rates",
+        "url": "https://www.ibjarates.com/index.html"
+      },
+      {
+        "name": "IBJA 2026 holiday list (no rates on weekends and holidays)",
+        "url": "https://www.ibjarates.com/pdf/List-of-Holidays/List-of-Holidays-2026.pdf"
+      }
+    ]
+  },
+  "gst": {
+    "rate_pct": 3,
+    "en": "GST on gold or silver jewellery is 3% of the total bill value, and the making charge is included in that total. The official FAQ says this applies whether or not the making charge is shown separately. A separate 5% applies only to job work done for a jeweller, not to a customer's purchase.",
+    "sources": [
+      {
+        "name": "GST Council: Sectoral FAQ, Gems & Jewellery",
+        "url": "https://gstcouncil.gov.in/sites/default/files/2024-02/sectoral-fq-gems-jewellery.pdf"
+      },
+      {
+        "name": "West Bengal Commercial Taxes: FAQ on Gems & Jewellery under GST",
+        "url": "https://comtax.wb.gov.in/GST/GST_FAQ/FAQ_on_Gems_&_Jewellery_under_GST.pdf"
+      }
+    ]
+  },
+  "duty": {
+    "rate_pct": 15,
+    "previous_pct": 6,
+    "since": "2026-05-13",
+    "en": "Import duty on gold and silver went up from 6% to 15% on 13 May 2026 (reported as 10% basic customs duty + 5% agriculture cess). We found no change after that as of 22 Nov 2026.",
+    "sources": [
+      {
+        "name": "News On AIR (Prasar Bharati): Government raises import duty on gold and precious metals",
+        "url": "https://newsonair.gov.in/government-raises-import-duty-on-gold-and-precious-metals-from-today"
+      },
+      {
+        "name": "World Gold Council: India gold market update, import tightening (22 May 2026)",
+        "url": "https://www.gold.org/goldhub/gold-focus/2026/05/india-gold-market-update-import-tightening"
+      }
+    ],
+    "pass_through": {
+      "gold_slope": 0.98,
+      "silver_slope": 0.83,
+      "period": "2000-01 to 2025-26",
+      "en": "In RBI yearly data since 2000-01, each 1 point of gold import duty lined up with about 1 point more in India's price over the world price (about 0.8 for silver).",
+      "source": {
+        "name": "Our research report (RBI Handbook data), section on duty and premium",
+        "url": "data/research/India%20gold%20silver%20prices%2080%20years.md"
+      }
+    }
+  },
+  "huid": {
+    "en": "Since 1 April 2023, hallmarked gold jewellery must carry a 6-character HUID code. You can check it for free in the official BIS CARE app (\"Verify HUID\"). Silver HUID hallmarking is voluntary.",
+    "sources": [
+      {
+        "name": "BIS: Hallmarking FAQ (HUID)",
+        "url": "https://www.bis.gov.in/hallmarking-overview/hallmarking-faqs/hallmarking-faq"
+      },
+      {
+        "name": "PIB: sale without 6-digit HUID prohibited after 31 March 2023",
+        "url": "https://consumeraffairs.nic.in/sites/default/files/PIB1904262.pdf"
+      },
+      {
+        "name": "BIS: consumer protection, Verify HUID in BIS CARE",
+        "url": "https://www.bis.gov.in/hallmarking-overview/consumer-protection/"
+      }
+    ]
+  }
+}

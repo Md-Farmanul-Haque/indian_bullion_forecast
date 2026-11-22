@@ -1,0 +1,15 @@
+# IBJA 30-day PDFs to read once (fills gaps and machine-checks the transcribed history).
+# Add more lines here if you find other PDFs under ibjarates.com/UploadedFiles/30DaysPdf/
+https://www.ibjarates.com/UploadedFiles/30DaysPdf/Pdf_7395_20251210170411149_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://ibjarates.com/UploadedFiles/30DaysPdf/Pdf_7749_20260106121804344_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://ibjarates.com/UploadedFiles/30DaysPdf/Pdf_3318_20260224123634611_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://ibjarates.com/UploadedFiles/30DaysPdf/Pdf_3004_20260407134521290_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://www.ibjarates.com/UploadedFiles/30DaysPdf/Pdf_2469_20260515084206689_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://www.ibjarates.com/UploadedFiles/30DaysPdf/Pdf_7705_20260604134305971_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://www.ibjarates.com/UploadedFiles/30DaysPdf/Pdf_6525_20260630134406466_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://www.ibjarates.com/UploadedFiles/30DaysPdf/Pdf_3300_20260908083624499_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://www.ibjarates.com/UploadedFiles/30DaysPdf/Pdf_8964_20261012084154514_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://www.ibjarates.com/UploadedFiles/30DaysPdf/Pdf_7253_20261026075102121_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://www.ibjarates.com/UploadedFiles/30DaysPdf/Pdf_2847_20261028074815240_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://ibjarates.com/UploadedFiles/30DaysPdf/Pdf_9968_20261116124229816_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf
+https://ibjarates.com/UploadedFiles/30DaysPdf/Pdf_1633_20261113124802509_Daily%20Opening%20and%20Closing%20Market%20Rate.pdf

@@ -1,0 +1,110 @@
+{
+ "status": "PASS",
+ "audited_utc": "2026-11-21T19:01:39Z",
+ "checks": [
+  {
+   "id": 1,
+   "name": "SSOT integrity",
+   "pass": true,
+   "details": "Headless Chrome: window.SSOT_DB deep-equals F1 (0 diffs, 5262 numbers); 527 GAP cells identical; deep-frozen (0 unfrozen nodes) and 6 mutation attempts (set/push/add/delete/length/defineProperty) all throw; engine annual series = 1970-71..2025-26 (56 pts) so the 1950-51 (97.70) and 1962-63 (119.59) gold cells are never annual averages and render as dated ministerial points; 94.71 appears only with DERIVED in every context on all 15 pages; SHA-256 of F1 = ce99ee57...dcea equals SSOT_META, STATE.input_sha256.F1 and the Caveats page; row counts match; engine DUTY_SCHEDULE equals F1 duty histories (ad valorem rows); HTML embeds current src verbatim.",
+   "numeric_diffs": {
+    "deep_diff_count": 0
+   }
+  },
+  {
+   "id": 2,
+   "name": "Gates (G3/G4)",
+   "pass": true,
+   "details": "Loop 2 re-run (tests/audit/check2_5_dom.py, check2b_p0_carryover.py, check5b_modeA_paths.py): all loop-1 gate cases still block. Defect path fixed for gold and silver: FY2025-26 SSOT-matched P0 then switch to Aug-2026 (post-13-May) benchmark -> 'P0 REQUIRED', nothing computed, stale value cleared from the field, button disabled; switching back to FY2025-26 shows 'SSOT FY 2025-26 premium cleared' and does not resurrect it; pre-May matched P0 still computes; explicit user P0 (incl. 5.61) post-May still computes and is labelled user; live P0 shows its as-of date and 'indicative: timing gap'. Loop-1 text: PASS: 1W/1M gold/silver/ratio with no anchor, value-without-date, date-without-value, zero/negative value, SSOT-benchmark source, and offline-fallback file all show 'CURRENT SPOT ANCHOR REQUIRED FOR 1W / 1M' with nothing computed; post-May (2026-11-19) anchor with P0 blank/auto/user/live-missing -> 'P0 REQUIRED' at 1W/1M/1Y; P0 inputs blank on load; live anchor without live P0 blocks and never surfaces 5.61/6.03. FAIL: the 'use FY 2025-26 SSOT premium' button writes 5.37% into the P0 field tagged source=user; switching the benchmark to Aug 2026 (anchor date 2026-08-31, after 13 May) leaves that pre-hike premium in force with no banner (gold and silver), so a pre-duty-hike SSOT premium silently feeds a post-hike anchor, which G4 exists to prevent.",
+   "numeric_diffs": {}
+  },
+  {
+   "id": 3,
+   "name": "Maths vs independent recomputation (fixtures A-E)",
+   "pass": true,
+   "details": "Own sigma from the 36 rows >=1990-91 (ddof=1): gold 12.334321 lp, silver 17.715556 lp (spec +/-0.02 ok). A: dln 0.024790169, base 148,639.50 identical at lambda 0/0.25/1, bear/bull match. B: dln -0.004301692, base 233,991.27. C: Ph 0.0318, dln(prem) -0.082023835, base 129,196.10, bear/bull = base*exp(-/+1.28155*sigma) with own sigma. E: tol 0/1/NaN/neg clamp to [0.005,0.5] no NaN; 1W no anchor blocked with exact banner; M0 skill exactly 0; live window below minimum -> NOT YET MEASURABLE. Extras vs own code: ratio 6x6 sigma, premVar off, mode (b) x sqrt(1.5), mode (c) hybrid and rho fallback -0.40, empirical q10/q90, post-1990 trend, silver slope 0.83 pass-through, ratio fixture, unit conversions (tola 1.166380, 995/999 only, Standard Gold rejected). Advisory only: engine.forecast() with the 'spot' shorthand and no date/basis defaults them to 'unspecified'/'user-stated' (UI gate enforces both). Loop-2 regression: fixtures A-C/D/E and extras re-run unchanged (A max diff 1.9e-10).",
+   "numeric_diffs": {
+    "max_vs_own_recompute": 3.552713678800501e-15,
+    "fixture_A_dln_vs_spec_literal": 1.92781304808598e-10,
+    "fixture_A_base": 0.0,
+    "fixture_B_dln_vs_spec_literal": 1.4596659037718895e-10,
+    "fixture_B_base_vs_spec_literal": 0.0035849056439474225,
+    "fixture_C_dlnPrem_vs_spec_literal": 4.785907919968579e-10,
+    "fixture_C_base_vs_spec": 1.4551915228366852e-11,
+    "fixture_D_gold_vs_12.33": 0.0043212860417121135,
+    "fixture_D_silver_vs_17.72": 0.004444365796157257,
+    "extras_max_abs": 1.4210854715202004e-14
+   }
+  },
+  {
+   "id": 4,
+   "name": "Anti-fabrication (G5/G6/G9)",
+   "pass": true,
+   "details": "Code grep (engine, ui_*, pages, build) and DOM text on all 15 pages in Mode B: no regional spread model (the word Mumbai appears only as F1 series labels and a fetcher note), 0 range/slider inputs, no risk-index/stance control, no 12% threshold, no Standard-Gold->995/999 maths (purityScale only 999<->995 and throws otherwise; UI states Standard Gold is never converted), WPI/CPI/monsoon/festival only as explicit 'not applied' statements and F4 historical charts, no buy/sell/hold/advice wording. Fetcher signals carry shock_hint=null; fetch_signals.py has none of these patterns.",
+   "numeric_diffs": {}
+  },
+  {
+   "id": 5,
+   "name": "Quarantine (G2)",
+   "pass": true,
+   "details": "Loop 2 re-run (check5_quarantine.py, check5b_modeA_paths.py): 3 saved entries (2 LIVE-anchored, 1 live-scored). Immediately after Mode A with no navigation, hidden-page DOM (textContent, title, href, value attributes) contains none of the live needles; Accuracy scorecard shows the user-anchored entry as 'PENDING (live-derived score hidden in Mode A)', live-anchored entries hidden, summary states what is hidden; scorecard JSON export in Mode A has no live values; reload into Mode A is clean; entries stay in storage and return in Mode B; mode flip with Forecast page open re-gates 1W; SSOT_DB unchanged; LIVE store null. Loop-1 text: PASS: Mode A blanks nowcast table, P0, vol, signals, loader inputs and the LIVE store; SSOT_DB is byte-identical before load, in Mode B and after Mode A, and contains none of the live anchor values, URLs or headlines. FAIL (a): the Live scorecard persists saved forecasts (localStorage) with LIVE anchors (e.g. 'Rs 1,29,985.00 · LIVE · 2026-11-19') and live-scored actuals (Rs 1,31,505) and still shows them on Accuracy Lab in Mode A, including after a reload. FAIL (b, minor): switching to Mode A re-renders only the current page; hidden Forecast and Matrix pages keep 'Rs 1,29,985.00' in the DOM until visited.",
+   "numeric_diffs": {}
+  },
+  {
+   "id": 6,
+   "name": "Honest accuracy (G8)",
+   "pass": true,
+   "details": "Own walk-forward recomputation of 1Y M0/M1 hit rate, MAE, 10-90 coverage and skill for gold and silver equals the UI to 1e-9 (n=45; gold M0 57.8% vs M1 51.1%, silver 55.6% vs 48.9%). Every hit-rate cell has the no-change rate and n beside it (4 backtest tables, meter, scorecard); live 1W/1M show NOT YET MEASURABLE (n 0 of 52/24); imported scorecard shows NYM at 51 scored 1W entries and numbers with no-change benchmark and n at 52; monthly flagged 'indicative: small sample'; M0 skill 0.00. Look-ahead: perturbing and permuting FY>K rows in master_yearly, decomposition, duty_vs_premium and monthly leaves every forecast, range, sigma and slope at origins <=K bit-identical for K in 1999-00/2009-10/2017-18/2023-24 and monthly cutoffs; positive control (changing the past) is detected. Meter: gold 1Y (a) own Phi(ln1.1/s)-Phi(ln0.9/s)=58.37% vs UI 58.4%; all (a)/(b) rows and labels and a tol=5%/target=55% case match own Phi. No unbacked accuracy sentence on any page. Note (not a defect): engine slices decomposition rows by array order, so correctness relies on F1's chronological order. Loop-2 regression: still pass (scorecard minimum-sample test now run in Mode B, since Mode A blanks live-scored entries by design).",
+   "numeric_diffs": {
+    "max_backtest_vs_own": 3.3306690738754696e-16,
+    "max_meter_vs_own_Phi": 0.00033848685480553087,
+    "meter_gold_1Y_a_own": 0.5836615131451944,
+    "meter_gold_1Y_a_ui": 0.584
+   }
+  },
+  {
+   "id": 7,
+   "name": "Offline & DOM",
+   "pass": true,
+   "details": "Static: no http(s) src/href/link/@import/url(), no external scripts, 13 inline scripts all pass node --check, no fetch/XHR/WebSocket/beacon in app code, all 9 src parts and ssot.js embedded verbatim. Headless Chrome at 1280 and 420 px, Mode A and B, with every select option, checkbox, button and extreme number inputs (0,-1,1e9,blank) on all 15 pages: 0 console errors, 0 page errors, 0 page network requests (Chrome's own background traffic is not page traffic), no NaN/undefined/Infinity text, no horizontal overflow. setInputFiles loads live_signals.json and live_history.json (124 rows); bad JSON, wrong-schema and array files are rejected with a message and do not clobber state; scorecard import works. Downloads fire and parse: forecast JSON/CSV, scenario JSON/CSV, matrix JSON/CSV, scorecard JSON/CSV, legacy data CSV; forecast export base 148,639.50 equals the KPI and fixture A. 28 external source links are target=_blank rel=noopener. Loop-2 regression: re-run at 1280/420 px: 0 console errors, 0 requests, all exports and loaders pass; rebuilt HTML embeds current src.",
+   "numeric_diffs": {}
+  }
+ ],
+ "defects": [
+  {
+   "check": "provenance-ii",
+   "owner": "fetcher",
+   "severity": "low",
+   "trace": "out/live_signals.json derived.p0_silver_pct (19.123%, 2026-11-18) and anchors.in_silver_rs_kg (2026-11-19) / world_silver_usd_oz (2026-11-18, STALE); out/live_history.json 2026-11-18 row time_basis 'Gap world->IBJA ~3.5 h on a -1.9% day'; out/fetch_signals.py:73-89",
+   "fix": "Silver P0 does pair Indian, world and INR values of the same date (18 Nov: 164,506 vs US$46.01 vs 93.3558 reproduces 19.123%) but not the same time basis (world 0242 GMT vs IBJA AM) and it is dated a day before the silver anchor (19 Nov). The row carries 'Gap' in time_basis, so the spec 3.4 alignment rule would exclude it from premium estimates, yet it supplies P0. Add machine-readable derived.p0_gold_date / p0_silver_date plus a timing_gap_hours field, mark P0 'indicative' in the schema, or leave p0_silver_pct null until a same-time world silver quote is read. Disclosed in notes and shown as 'indicative' in the UI, so not blocking by itself."
+  }
+ ],
+ "advisories": [
+  "engine.forecast() with 'spot' shorthand and no date/basis fills 'unspecified'/'user-stated' (src/engine.js:277); UI blocks it, library does not (A2, low).",
+  "High-duty fact note is keyed to the scenario's new duty (src/ui_forecast.js:163); it disappears for a 15%->6% scenario and while blocked although the duty in force is 15% (A2, low).",
+  "Engine M3/M2 rolling windows slice decomposition_log_points by array order (src/engine.js forecastAtOrigin/backtestMonthly); sort by fiscal_year to be robust (A2, low).",
+  "Provenance (i): Fetch of https://www.rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx?prid=63996 returned the RBI release dated 18 Nov 2026 for premature redemption of SGB 2020-21 Series II due 19 Nov 2026 at Rs 13,345 per unit (IBJA 999 average of 16-18 Nov): the fetcher's GOV-PRIMARY tag and value are correct."
+ ],
+ "loop": 2,
+ "scripts": [
+  "tests/audit/check1_ssot.py",
+  "tests/audit/check2_5_dom.py",
+  "tests/audit/check2b_p0_carryover.py",
+  "tests/audit/check3_maths.py",
+  "tests/audit/check3b_extra.py",
+  "tests/audit/check4_dom.py",
+  "tests/audit/check5_quarantine.py",
+  "tests/audit/check6_accuracy.py",
+  "tests/audit/check6_lookahead.js",
+  "tests/audit/check7_static.py",
+  "tests/audit/check7_dom.py",
+  "tests/audit/check7_export.py",
+  "tests/audit/check_misc_dom.py",
+  "tests/audit/check5b_modeA_paths.py"
+ ],
+ "webfetch_used": 1,
+ "defects_resolved_loop2": [
+  2,
+  5
+ ]
+}
