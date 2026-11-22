@@ -91,7 +91,7 @@
   /* Price line (with gaps) and, if o.range is given, the cone of likely prices ahead.
      o: {history:[[iso, price]], fromDay, range:{start, price, sigma, trading, days, low80, high80}, cls, fmtDate, fmtMoney, monthName, tipRange} */
   function priceChart(host, o) {
-    var f = frame(host, 0.6, 220, 330), W = f.W, H = f.H, svg = f.svg;
+    var f = frame(host, 0.6, 220, (host.clientWidth || 0) > 600 ? 420 : 330), W = f.W, H = f.H, svg = f.svg;
     var m = { l: 4, r: 84, t: 16, b: 26 };
     var R = o.range, t0 = R ? day(R.start) : null, t1 = R ? t0 + R.days : null;
     var lastHist = day(o.history[o.history.length - 1][0]);

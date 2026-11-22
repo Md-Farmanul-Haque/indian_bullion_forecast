@@ -49,6 +49,29 @@
     document.body.classList.toggle('silver-mode', S.metal === 'silver');
   }
 
+  /* ---------- At a glance ---------- */
+  function spark(hist, last) {
+    var from = Charts.day(last) - 30, pts = hist.filter(function (p) { return Charts.day(p[0]) >= from; });
+    if (pts.length < 2) return '';
+    var v = pts.map(function (p) { return p[1]; }), lo = Math.min.apply(null, v), hi = Math.max.apply(null, v), W = 120, Hh = 34;
+    var d = pts.map(function (p, i) { return (i ? 'L' : 'M') + (i / (pts.length - 1) * W).toFixed(1) + ',' + (Hh - 3 - (p[1] - lo) / (hi - lo || 1) * (Hh - 6)).toFixed(1); }).join('');
+    return '<svg viewBox="0 0 ' + W + ' ' + Hh + '" preserveAspectRatio="none" class="spark" aria-hidden="true"><path d="' + d + '"/></svg>';
+  }
+  function renderGlance() {
+    html($('glance'), ['gold22', 'gold24', 'silver'].map(function (k) {
+      var m = DATA.metals[k], L = m.latest, ch = m.month_ago ? (L.price / m.month_ago.price - 1) * 100 : null;
+      return '<button type="button" class="gl' + (k === 'silver' ? ' gl-s' : '') + '" data-metal="' + k + '" aria-pressed="' + (k === S.metal) + '">' +
+        '<span class="gl-name">' + esc(t(METAL_NAME[k])) + '</span>' +
+        '<span class="gl-price">' + money(L.price) + '</span>' +
+        '<span class="gl-unit">' + esc(k === 'silver' ? t('unit_kg') : t('unit_10g')) + '</span>' +
+        spark(m.history, L.date) +
+        '<span class="gl-ch ' + (ch > 0 ? 'up' : ch < 0 ? 'down' : '') + '">' + (ch == null ? '' : (ch > 0 ? '▲ ' : ch < 0 ? '▼ ' : '') + pct(ch) + '<span class="gl-long"> · ' + esc(t('glance_30')) + '</span>') + '</span></button>';
+    }).join(''));
+    $('glance').querySelectorAll('.gl').forEach(function (b) {
+      b.addEventListener('click', function () { S.metal = b.getAttribute('data-metal'); S.purity = null; store('metal', S.metal); renderAll(); });
+    });
+  }
+
   /* ---------- Today ---------- */
   function renderToday(m) {
     var L = m.latest, silver = S.metal === 'silver';
@@ -282,7 +305,8 @@
 
   function renderAll() {
     applyText();
-    document.querySelectorAll('main .card').forEach(function (c) { c.hidden = false; });
+    document.querySelectorAll('main .card, #glance').forEach(function (c) { c.hidden = false; });
+    renderGlance();
     $('loading').hidden = true;
     var m = DATA.metals[S.metal];
     renderToday(m); renderOld(m); renderNext(m); renderRecord(m); renderBill(); renderWhy(m); renderDates(); renderAbout();
@@ -310,6 +334,7 @@
     if (mt && METAL_NAME[mt]) S.metal = mt;
     var h = store('h'); if (h != null && +h >= 0 && +h <= 3) S.h = +h;
     $('n-h').value = S.h;
+    if (window.innerWidth >= 1000) $('w-try').open = true;   // more room on big screens
     applyText(); wire();
     fetch('data/site.json', { cache: 'no-cache' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (d) { DATA = d; renderAll(); })

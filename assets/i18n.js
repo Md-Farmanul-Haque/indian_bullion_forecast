@@ -6,6 +6,7 @@ window.I18N = {
     m_gold22: '22K Gold', m_gold24: '24K Gold', m_silver: 'Silver',
     g_gold22: '22K gold', g_gold24: '24K gold', g_silver: 'silver',
     nav_today: "Today's price", nav_old: 'Old prices', nav_next: 'Price later', nav_record: 'Were we right?', nav_bill: 'Check your bill', nav_why: 'What changes the price', nav_dates: 'Big news days', nav_tips: 'Before you buy', nav_about: 'How this works',
+    glance_30: 'last 30 days', glance_tap: 'Tap to see details',
     unit_10g: 'per 10 grams', unit_kg: 'per kg', unit_g: 'per gram',
 
     today_title: "Today's price",

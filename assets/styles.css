@@ -23,12 +23,12 @@ button { font: inherit; color: inherit; }
 b { font-weight: 650; }
 
 .bar { position: sticky; top: 0; z-index: 20; background: var(--bg); box-shadow: 0 1px 0 var(--line); }
-.topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: calc(10px + env(safe-area-inset-top)) 16px 4px; max-width: 760px; margin: 0 auto; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: calc(10px + env(safe-area-inset-top)) 16px 4px; max-width: 1180px; margin: 0 auto; }
 .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
 .logo { width: 34px; height: 34px; flex: none; }
 .brand-name { font-weight: 700; font-size: 16px; line-height: 1.2; }
 .brand-sub { font-size: 12px; color: var(--ink3); line-height: 1.25; }
-.picker { padding: 4px 16px 8px; max-width: 760px; margin: 0 auto; }
+.picker { padding: 4px 16px 8px; max-width: 1180px; margin: 0 auto; }
 
 .seg { display: inline-flex; background: var(--fill); border-radius: 10px; padding: 2px; gap: 2px; }
 .card .seg { background: var(--bg); }
@@ -213,4 +213,47 @@ input[type="date"] { font: inherit; font-size: 18px; padding: 9px 12px; border-r
 details > summary + * { margin-top: 4px; }
 #w-try { margin-top: 8px; }
 .events .cal .d { white-space: nowrap; font-size: 18px; }
-@media (min-width: 700px) { .chips { flex-wrap: wrap; overflow: visible; } }
+
+/* ----- at a glance ----- */
+.glance { display: grid; grid-template-columns: repeat(3, minmax(150px, 1fr)); gap: 10px; margin: 12px 0 4px; overflow-x: auto; }
+.gl { text-align: left; border: 1px solid var(--line); background: var(--card); border-radius: 18px; padding: 12px 14px 10px; cursor: pointer; display: flex; flex-direction: column; gap: 1px; box-shadow: var(--shadow); transition: transform .15s ease, box-shadow .15s ease; min-width: 0; }
+.gl:hover { transform: translateY(-2px); }
+.gl[aria-pressed="true"] { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-band2), var(--shadow); }
+.gl-s[aria-pressed="true"] { border-color: var(--silver); box-shadow: 0 0 0 2px var(--silver-band2), var(--shadow); }
+.gl-name { font-size: 13px; color: var(--ink2); font-weight: 600; }
+.gl-price { font-size: 21px; font-weight: 750; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+.gl-unit { font-size: 12px; color: var(--ink3); }
+.gl-ch { font-size: 12.5px; color: var(--ink2); }
+.spark { width: 100%; height: 34px; margin: 4px 0 2px; }
+.spark path { fill: none; stroke: var(--gold); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.gl-s .spark path { stroke: var(--silver); }
+@media (max-width: 520px) {
+  .glance { grid-template-columns: repeat(3, 1fr); gap: 8px; overflow: visible; }
+  .gl { padding: 9px 9px 8px; border-radius: 14px; }
+  .gl-name { font-size: 12px; } .gl-price { font-size: 15px; } .gl-unit { font-size: 11px; }
+  .gl-ch { font-size: 11.5px; } .gl-ch .gl-long { display: none; }
+  .spark { height: 24px; }
+}
+
+/* ----- desktop dashboard: two columns, balanced rows ----- */
+@media (min-width: 1000px) {
+  .picker { display: flex; align-items: center; gap: 16px; }
+  .picker .seg-metal { width: 380px; flex: none; }
+  .chips { flex-wrap: wrap; overflow: visible; padding: 0; }
+  main { max-width: 1180px; display: grid; gap: 16px; align-items: stretch;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-areas:
+      "gl gl gl gl gl gl gl gl gl gl gl gl"
+      "td td td td td nx nx nx nx nx nx nx"
+      "ol ol ol ol ol nx nx nx nx nx nx nx"
+      "rc rc rc rc rc rc bl bl bl bl bl bl"
+      "tp tp tp tp tp tp bl bl bl bl bl bl"
+      "wy wy wy wy wy wy dt dt dt dt dt dt"
+      "ab ab ab ab ab ab ab ab ab ab ab ab"; }
+  .loading { grid-column: 1 / -1; }
+  .card { margin: 0; }
+  .glance { grid-area: gl; margin: 4px 0 0; }
+  #today { grid-area: td; } #next { grid-area: nx; } #old { grid-area: ol; } #record { grid-area: rc; }
+  #bill { grid-area: bl; } #why { grid-area: wy; } #dates { grid-area: dt; } #tips { grid-area: tp; } #about { grid-area: ab; }
+  .hero .price-big { font-size: 52px; }
+}
