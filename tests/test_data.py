@@ -158,16 +158,20 @@ class RealData(unittest.TestCase):
             self.assertLess(d.weekday(), 6, f'{d} is a Sunday')
 
     def test_reproduces_rbi_sgb_prices(self):
-        chart = json.load(open(os.path.join(ROOT, 'data', 'research', 'chart_data.json'), encoding='utf-8'))
+        with open(os.path.join(ROOT, 'data', 'research', 'chart_data.json'), encoding='utf-8') as fh:
+            chart = json.load(fh)
         checks = B.sgb_checks(self.rows, chart)
         self.assertGreaterEqual(len(checks), 5)
         self.assertTrue(all(c['match'] for c in checks), checks)
 
     def test_build_and_record_rules(self):
         tmp = tempfile.mkdtemp()
+        old = B.DATA
         try:
             shutil.copytree(os.path.join(ROOT, 'data'), os.path.join(tmp, 'data'))
-            old = B.DATA
+            # start from an empty public record: the workflow may already have saved today's ranges
+            with open(os.path.join(tmp, 'data', 'forecasts.csv'), 'w', encoding='utf-8') as fh:
+                fh.write(','.join(B.LEDGER_COLS) + '\n')
             B.DATA = os.path.join(tmp, 'data')
             last = max(self.rows)
             site, new = B.build(record=True, today=last + dt.timedelta(days=30))
@@ -180,17 +184,20 @@ class RealData(unittest.TestCase):
                 f = m['forecast']
                 self.assertLess(f['low80'], m['latest']['price'])
                 self.assertGreater(f['high80'], m['latest']['price'])
-            B.DATA = old
         finally:
+            B.DATA = old
             shutil.rmtree(tmp)
 
     def test_facts_and_events_have_https_sources(self):
-        facts = json.load(open(os.path.join(ROOT, 'data', 'facts.json'), encoding='utf-8'))
+        with open(os.path.join(ROOT, 'data', 'facts.json'), encoding='utf-8') as fh:
+            facts = json.load(fh)
         for k in ('ibja', 'gst', 'duty', 'huid'):
             self.assertTrue(facts[k]['sources'])
             for s in facts[k]['sources']:
                 self.assertTrue(s['url'].startswith('https://'), s)
-        for e in json.load(open(os.path.join(ROOT, 'data', 'events.json'), encoding='utf-8')):
+        with open(os.path.join(ROOT, 'data', 'events.json'), encoding='utf-8') as fh:
+            events = json.load(fh)
+        for e in events:
             self.assertTrue(e['source']['url'].startswith('https://'))
             self.assertLessEqual(e['start'], e['end'])
 
@@ -205,7 +212,8 @@ class Hygiene(unittest.TestCase):
                     p = os.path.join(dirpath, f)
                     if p.endswith('test_data.py'):
                         continue
-                    hit = pat.search(open(p, encoding='utf-8', errors='replace').read())
+                    with open(p, encoding='utf-8', errors='replace') as fh:
+                        hit = pat.search(fh.read())
                     self.assertIsNone(hit, f'{p}: {hit and hit.group(0)}')
 
 

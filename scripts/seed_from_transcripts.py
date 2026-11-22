@@ -24,7 +24,8 @@ def main():
     cands, coverage = {}, []
     for path in sorted(glob.glob(os.path.join(ROOT, 'data', 'ibja_transcripts', '*.txt'))):
         name = os.path.splitext(os.path.basename(path))[0]
-        rows = ibja.parse_text(open(path, encoding='utf-8').read())
+        with open(path, encoding='utf-8') as fh:
+            rows = ibja.parse_text(fh.read())
         coverage.append((name, min(rows), max(rows), len(rows)))
         for d, r in rows.items():
             clean, notes = ibja.check_row(r)

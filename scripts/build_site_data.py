@@ -194,9 +194,10 @@ def sgb_checks(rows, chart):
 def build(record=False, today=None):
     today = today or dt.datetime.now(dt.timezone.utc).date()
     rows = ibja.read_csv(os.path.join(DATA, 'ibja_daily.csv'))
-    chart = json.load(open(os.path.join(DATA, 'research', 'chart_data.json'), encoding='utf-8'))
-    facts = json.load(open(os.path.join(DATA, 'facts.json'), encoding='utf-8'))
-    events = json.load(open(os.path.join(DATA, 'events.json'), encoding='utf-8'))
+    def load(*parts):
+        with open(os.path.join(DATA, *parts), encoding='utf-8') as fh:
+            return json.load(fh)
+    chart, facts, events = load('research', 'chart_data.json'), load('facts.json'), load('events.json')
     ledger_path = os.path.join(DATA, 'forecasts.csv')
 
     site = {'generated_utc': dt.datetime.now(dt.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
